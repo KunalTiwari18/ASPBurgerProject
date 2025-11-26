@@ -1,0 +1,31 @@
+# render.yaml - Render Blueprint to create a Web Service for this repo (example)
+services:
+  - type: web
+    name: bburgerclone-web
+    env: docker
+    repo: https://github.com/<YOUR_USERNAME>/<YOUR_REPO_NAME>
+    branch: main
+    plan: free
+    buildCommand: docker build -t bburgerclone .
+    startCommand: docker run -e PORT=$PORT bburgerclone
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: SMTP__Host
+        value: smtp.example.com
+        sync: true
+      - key: SMTP__Port
+        value: "587"
+        sync: true
+      - key: SMTP__User
+        value: smtp-user@example.com
+        sync: true
+      - key: SMTP__Pass
+        value: "smtp-password"
+        sync: true
+      - key: STRIPE__PublishableKey
+        value: "pk_test_XXXXXXXXXXXXXXXXXXXX"
+        sync: true
+      - key: STRIPE__SecretKey
+        value: "sk_test_XXXXXXXXXXXXXXXXXXXX"
+        sync: true

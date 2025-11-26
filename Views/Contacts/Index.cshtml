@@ -1,0 +1,65 @@
+﻿@model BBURGERClone.Models.ContactForm
+
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<div class="contact-page container">
+    <h1>Contact Us</h1>
+
+    @if (TempData["ContactSuccess"] != null)
+    {
+        <div class="alert success">@TempData["ContactSuccess"]</div>
+    }
+    else if (TempData["ContactError"] != null)
+    {
+        <div class="alert error">@TempData["ContactError"]</div>
+    }
+
+    <div class="contact-grid">
+        <div class="contact-form-card">
+            <form asp-action="Index" method="post" novalidate>
+                @Html.AntiForgeryToken()
+                <div class="form-row">
+                    <label for="Name">Name</label>
+                    <input id="Name" name="Name" value="@Model.Name" />
+                    <span asp-validation-for="Name" class="field-validation"></span>
+                </div>
+
+                <div class="form-row">
+                    <label for="Email">Email</label>
+                    <input id="Email" name="Email" value="@Model.Email" type="email" />
+                    <span asp-validation-for="Email" class="field-validation"></span>
+                </div>
+
+                <div class="form-row">
+                    <label for="Message">Message</label>
+                    <textarea id="Message" name="Message" rows="6">@Model.Message</textarea>
+                    <span asp-validation-for="Message" class="field-validation"></span>
+                </div>
+
+                <div class="form-row actions">
+                    <button class="btn large" type="submit">Send Message</button>
+                    <button class="btn outline" type="reset">Reset</button>
+                </div>
+            </form>
+        </div>
+
+        <aside class="contact-info-card">
+            <h3>Contact Details</h3>
+            <p>Got a question or feedback? We’d love to hear from you.</p>
+            <ul class="contact-list">
+                <li><strong>Email:</strong> <a href="mailto:support@bburgerclone.com">support@bburgerclone.com</a></li>
+                <li><strong>Phone:</strong> <a href="tel:+919876543210">+91 98765 43210</a></li>
+                <li><strong>Address:</strong> Mumbai, India</li>
+            </ul>
+
+            <h4>Opening hours</h4>
+            <p class="muted-note">Daily: 10:00 — 23:00</p>
+        </aside>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

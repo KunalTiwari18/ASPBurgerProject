@@ -1,0 +1,64 @@
+﻿@model List<BBURGERClone.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h1>Checkout</h1>
+
+<form id="checkout-form-sim" asp-controller="Checkout" asp-action="ConfirmSimulated" method="post">
+    @Html.AntiForgeryToken()
+    <div style="max-width:600px;">
+        <label>Name</label><br />
+        <input name="customerName" required /><br />
+        <label>Address</label><br />
+        <textarea name="address" required></textarea><br />
+        <label>Email</label><br />
+        <input name="email" type="email" required /><br />
+
+        <h3>Order Summary</h3>
+        <ul>
+            @foreach (var it in Model)
+            {
+                <li>@it.Product.Name x @it.Quantity = @String.Format("₹{0:0.00}", it.LineTotal)</li>
+            }
+        </ul>
+        <p>Total: <strong>@String.Format("₹{0:0.00}", Model.Sum(i => i.LineTotal))</strong></p>
+
+        <div style="margin-top:16px;">
+            <button type="submit">Pay Now (Simulated)</button>
+        </div>
+    </div>
+</form>
+
+<hr />
+
+<!-- Stripe form (only use if you integrate Stripe) -->
+<form id="checkout-form-stripe" asp-controller="Checkout" asp-action="CreateStripeSession" method="post" style="display:block;">
+    @Html.AntiForgeryToken()
+    <!-- hidden fields to forward customer details to CreateStripeSession -->
+    <input type="hidden" name="customerName" id="stripeCustomerName" />
+    <input type="hidden" name="address" id="stripeAddress" />
+    <input type="hidden" name="email" id="stripeEmail" />
+    <button id="stripe-pay-btn" type="submit">Pay with Card (Stripe)</button>
+</form>
+
+<script>
+    // Copy customer details into stripe form when user clicks the stripe button
+    document.getElementById('checkout-form-stripe').addEventListener('submit', function(e) {
+        var name = document.querySelector('input[name="customerName"]').value;
+        var address = document.querySelector('textarea[name="address"]').value;
+        var email = document.querySelector('input[name="email"]').value;
+
+        if (!name || !address || !email) {
+            alert('Please fill your name, address and email first.');
+            e.preventDefault();
+            return false;
+        }
+
+        document.getElementById('stripeCustomerName').value = name;
+        document.getElementById('stripeAddress').value = address;
+        document.getElementById('stripeEmail').value = email;
+        // submission continues to server (CreateStripeSession action)
+    });
+</script>

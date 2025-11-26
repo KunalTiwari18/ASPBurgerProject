@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Thank you";
+
+    string orderId = ViewBag.OrderId ?? (string?)TempData["OrderId"] ?? "N/A";
+
+    // Convert total safely
+    decimal total = 0m;
+    if (ViewBag.Total is decimal dec)
+        total = dec;
+    else if (TempData["Total"] != null && decimal.TryParse(TempData["Total"].ToString(), out var tmp))
+        total = tmp;
+
+    string method = ViewBag.PaymentMethod ?? (string?)TempData["PaymentMethod"] ?? "Unknown";
+    string payer = ViewBag.PayerName ?? (string?)TempData["PayerName"] ?? "";
+}
